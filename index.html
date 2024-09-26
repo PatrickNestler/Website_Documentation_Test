@@ -1,1 +1,735 @@
-<h1>Hello!</h1>
+<!DOCTYPE html> 
+<html lang='en-US' xml:lang='en-US'> 
+<head><title></title> 
+<meta charset='utf-8' /> 
+<meta content='TeX4ht (https://tug.org/tex4ht/)' name='generator' /> 
+<meta content='width=device-width,initial-scale=1' name='viewport' /> 
+<link href='Documentation.css' rel='stylesheet' type='text/css' /> 
+<meta content='Documentation.tex' name='src' /> 
+<script>window.MathJax = { tex: { tags: "ams", }, }; </script> 
+ <script async='async' id='MathJax-script' src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js' type='text/javascript'></script>  
+</head><body>
+<div class='center'>
+<!-- l. 92 --><p class='noindent'>
+</p>
+<div class='minipage'><!-- l. 95 --><p class='noindent'> <img alt='PIC' height='145' src='gfx/TUC_LogoText_TUC2-.png' width='145' />                                                                                                                     
+<img alt='PIC' height='145' src='gfx/ACSD_LogoText_TUC2-.png' width='145' />                                                                                        </p></div>
+<!-- l. 101 --><p class='noindent'><span class='cmr-17'>Faculty of Electrical Engineering and Information Technology</span>
+</p><!-- l. 106 --><p class='noindent'><span class='cmr-17'>Automatic Control and System Dynamics Lab</span>
+</p><!-- l. 111 --><p class='noindent'><span class='cmbx-12x-x-207'>Software documentation</span>
+</p><!-- l. 115 --><p class='noindent'><span class='cmr-17'>for a nutrient mixing optimization algorithm</span>
+</p><!-- l. 120 --><p class='noindent'><span class='cmbx-12x-x-120'>Authors:</span><br />
+<span class='cmr-12x-x-120'>Patrick Nestler</span><br />
+<span class='cmr-12x-x-120'>Alexander Kobelski</span><br />
+<span class='cmr-12x-x-120'>Stefan Streif</span><br />
+</p>
+</div>
+<!-- l. 128 --><p class='noindent'>
+                                                                                            
+                                                                                            
+                                                                                            
+                                                                                            
+</p>
+   <h2 class='likechapterHead'><a id='x1-1000'></a>Contents</h2>
+   <div class='tableofcontents'>
+   <span class='chapterToc'>1 <a href='#x1-20001' id='QQ2-1-2'>Prerequisites</a></span>
+<br />   <span class='sectionToc'>1.1 <a href='#x1-30001.1' id='QQ2-1-3'>Running and debugging the program code</a></span>
+<br />   <span class='chapterToc'>2 <a href='#x1-80002' id='QQ2-1-9'>Structure of the program</a></span>
+<br />   <span class='sectionToc'>2.1 <a href='#x1-90002.1' id='QQ2-1-11'>Contents of the input xml-files</a></span>
+<br />   <span class='sectionToc'>2.2 <a href='#x1-140002.2' id='QQ2-1-24'>Reading the parameters with pandas</a></span>
+<br />   <span class='sectionToc'>2.3 <a href='#x1-150002.3' id='QQ2-1-25'>Setting up and solving the optimization problem</a></span>
+<br />   <span class='sectionToc'>2.4 <a href='#x1-220002.4' id='QQ2-1-40'>Saving the parameters in an output xml-file with pandas</a></span>
+<br />   <span class='chapterToc'>3 <a href='#x1-230003' id='QQ2-1-41'>Additional notes</a></span>
+<br />   <span class='sectionToc'>3.1 <a href='#x1-240003.1' id='QQ2-1-42'>Error messages</a></span>
+<br />   <span class='sectionToc'>3.2 <a href='#x1-250003.2' id='QQ2-1-43'>Deactivating plots</a></span>
+<br />   <span class='sectionToc'>3.3 <a href='#x1-260003.3' id='QQ2-1-44'>Copyright and License</a></span>
+   </div>
+<!-- l. 147 --><p class='indent'>
+                                                                                            
+                                                                                            
+                                                                                            
+                                                                                            
+</p>
+   <h2 class='chapterHead'><span class='titlemark'>Chapter 1</span><br /><a id='x1-20001'></a>Prerequisites</h2>
+<!-- l. 150 --><p class='noindent'>This documentation servers a detailed documentation for an algorithm that calculates optimal inputs
+to mix a desired nutrient solution. The algorithm is being published with the article Kobelski et. al
+2024 (currently under review; doi follows as soon as available). When using the algorithm, please cite
+this article. References made to sections, tables, and equations are related to this article. The aim
+is to facilitate the usage of the program and to demonstrate how to adapt it to other
+systems.
+</p><!-- l. 155 --><p class='indent'>   In the first part of the documentation it is explained what prerequisites are needed to run the
+program. Then, a more detailed explanation of the program-structure is given. Afterwards the
+xml-files, which contain the parameters of the optimal control problem, are described in detail. It is
+also explained which parameters are mandatory and which are optional to run the program. The last
+part of the documentation then shows how the given parameters are used to set up the
+optimization.
+</p>
+   <h3 class='sectionHead'><span class='titlemark'>1.1   </span> <a id='x1-30001.1'></a>Running and debugging the program code</h3>
+<!-- l. 161 --><p class='noindent'><span class='paragraphHead'><a id='x1-4000'></a><span class='cmbx-12'>Prerequisites</span></span>
+   The program is implemented in the Python file <span class='path'><span class='cmtt-12'>Static_NutrientMixing.py</span></span> and can be run like
+any other <span class='path'><span class='cmtt-12'>.py</span></span> file. First of all, a Python interpreter has to be installed. For the simulation study in
+the article Python version 3.11 was used. It is recommended to use the same or a newer version for
+the interpreter.
+</p><!-- l. 167 --><p class='indent'>   For the code-implementation several Python packages are used, see Tab. <a href='#x1-4001r1'>1<!-- tex4ht:ref: tab:packages  --></a>. These libraries contain
+pre-built functions for reading and writing of, e.g., xml-files as well as the framework for the optimal
+control problem presented in Sec. 2.2. For easier access to these libraries a package-manager may need
+to be installed.
+</p>
+   <div class='table'>
+                                                                                            
+                                                                                            
+<!-- l. 172 --><p class='indent'>   </p><figure class='float'>
+                                                                                            
+                                                                                            
+<a id='x1-4001r1'></a>
+<figcaption class='caption'><span class='id'>Table 1: </span><span class='content'>Packages used for implementing the program.
+</span></figcaption><!-- tex4ht:label?: x1-4001r1  -->
+
+ <table class='tabular' id='TBL-3'><colgroup id='TBL-3-1g'><col id='TBL-3-1' /></colgroup><colgroup id='TBL-3-2g'><col id='TBL-3-2' /></colgroup><tr id='TBL-3-1-' style='vertical-align:baseline;'><td class='td11' id='TBL-3-1-1' style='white-space:normal; text-align:left;'> <!-- l. 190 --><p class='noindent'><span class='cmbx-12'>Package</span>                                       </p></td><td class='td11' id='TBL-3-1-2' style='white-space:normal; text-align:left;'> <!-- l. 190 --><p class='noindent'><span class='cmbx-12'>Use in the program</span>                        </p></td>
+</tr><tr id='TBL-3-2-' style='vertical-align:baseline;'><td class='td11' id='TBL-3-2-1' style='white-space:normal; text-align:left;'> <!-- l. 190 --><p class='noindent'>numpy                                                 </p></td><td class='td11' id='TBL-3-2-2' style='white-space:normal; text-align:left;'> <!-- l. 190 --><p class='noindent'>easily generate arrays of ones and arrays
+  of zeros                                               </p></td>
+</tr><tr id='TBL-3-4-' style='vertical-align:baseline;'><td class='td11' id='TBL-3-4-1' style='white-space:normal; text-align:left;'> <!-- l. 190 --><p class='noindent'>matplotlib</p></td><td class='td11' id='TBL-3-4-2' style='white-space:normal; text-align:left;'> <!-- l. 190 --><p class='noindent'>generate plots to visualize the results of
+  the optimization                                   </p></td>
+</tr><tr id='TBL-3-6-' style='vertical-align:baseline;'><td class='td11' id='TBL-3-6-1' style='white-space:normal; text-align:left;'> <!-- l. 190 --><p class='noindent'>math</p></td><td class='td11' id='TBL-3-6-2' style='white-space:normal; text-align:left;'> <!-- l. 190 --><p class='noindent'>use <span class='path'><span class='cmtt-12'>isnan()</span></span> function to check if given
+  parameter is set in xml-files                    </p></td>
+</tr><tr id='TBL-3-8-' style='vertical-align:baseline;'><td class='td11' id='TBL-3-8-1' style='white-space:normal; text-align:left;'> <!-- l. 190 --><p class='noindent'>pandas                                                </p></td><td class='td11' id='TBL-3-8-2' style='white-space:normal; text-align:left;'> <!-- l. 190 --><p class='noindent'>read parameters from xml-files and
+  convert data to Python dictionaries; write
+  the optimization results in a xml-file         </p></td>
+</tr><tr id='TBL-3-10-' style='vertical-align:baseline;'><td class='td11' id='TBL-3-10-1' style='white-space:normal; text-align:left;'> <!-- l. 190 --><p class='noindent'>casadi                                                  </p></td><td class='td11' id='TBL-3-10-2' style='white-space:normal; text-align:left;'> <!-- l. 190 --><p class='noindent'>set up optimization problem symbolically;
+  provide interface to NLP solver, e.g.
+  IPOPT                                               </p></td>
+</tr><tr id='TBL-3-12-' style='vertical-align:baseline;'><td class='td11' id='TBL-3-12-1' style='white-space:normal; text-align:left;'> <!-- l. 190 --><p class='noindent'>tkinter                                                 </p></td><td class='td11' id='TBL-3-12-2' style='white-space:normal; text-align:left;'> <!-- l. 190 --><p class='noindent'>generate interactive error messages           </p></td>
+
+</tr></table>
+                                                                                            
+                                                                                            
+   </figure>
+   </div>
+<!-- l. 192 --><p class='indent'>   There are multiple ways to provide a Python interpreter and the needed packages, but one free to
+use software which combines both is the distribution <span class='cmbx-12'>Anaconda</span>. It has an in-built Python interpreter
+of version 3.11 and also contains all required packages.
+</p><!-- l. 195 --><p class='indent'>   For editing and testing/debugging the code an additional Python editor is needed. Free software
+<span class='cmbx-12'>Visual Studio Code </span>was used for the program implementation and therefore the descriptions in this
+documentation are based on this IDE.
+</p>
+<!-- l. 197 --><p class='noindent'><span class='paragraphHead'><a id='x1-5000'></a><span class='cmbx-12'>Running the code</span></span>
+   With Anaconda installed, running the program can be done with the windows command prompt.
+The necessary steps are: </p>
+      <ul class='itemize1'>
+      <li class='itemize'>in the command prompt, change to directory where Anaconda is installed <span class='path'><span class='cmtt-12'>...\anaconda3</span></span>
+      </li>
+      <li class='itemize'>move further into directory <span class='path'><span class='cmtt-12'>...\anaconda3\condabin</span></span>
+      </li>
+      <li class='itemize'>run batch file <span class='path'><span class='cmtt-12'>conda_hook.bat</span></span>
+      </li>
+      <li class='itemize'>activate conda base environment with <span class='path'><span class='cmtt-12'>conda</span></span> <span class='path'><span class='cmtt-12'>activate</span></span> <span class='path'><span class='cmtt-12'>...\anaconda3</span></span>
+      </li>
+      <li class='itemize'>change to directory where program code of <span class='path'><span class='cmtt-12'>Static_NutrientMixing.py</span></span> is saved
+      </li>
+      <li class='itemize'>type <span class='path'><span class='cmtt-12'>python</span></span> <span class='path'><span class='cmtt-12'>Static_NutrientMixing.py</span></span>.</li></ul>
+<!-- l. 207 --><p class='noindent'>The first four steps may be skipped when using the built in Anaconda command prompt.
+</p>
+<!-- l. 209 --><p class='noindent'><span class='paragraphHead'><a id='x1-6000'></a><span class='cmbx-12'>Creating a new Conda environment</span></span>
+   Note, that after step 4 the program will be run in the base environment of Anaconda which
+contains all the needed packages listed in Tab. <a href='#x1-4001r1'>1<!-- tex4ht:ref: tab:packages  --></a>, but also many more libraries. To run the program in
+a more compact virtual environment, that only contains the needed packages, a new environment can
+be created via the Anaconda prompt: </p>
+      <ul class='itemize1'>
+      <li class='itemize'>in Anaconda prompt, change to directory where new environment should be created
+                                                                                            
+                                                                                            
+      </li>
+      <li class='itemize'>type <span class='path'><span class='cmtt-12'>conda</span></span> <span class='path'><span class='cmtt-12'>create</span></span> <span class='path'><span class='cmtt-12'>-p</span></span> <span class='path'><span class='cmtt-12'>&lt;path&gt;\&lt;env_name&gt;</span></span> <span class='path'><span class='cmtt-12'>Python=3.11</span></span> <span class='path'><span class='cmtt-12'>numpy</span></span> <span class='path'><span class='cmtt-12'>matplotlib</span></span> <span class='path'><span class='cmtt-12'>pandas</span></span> <br class='newline' /><span class='path'><span class='cmtt-12'>casadi</span></span>
+      </li>
+      <li class='itemize'>if CasADi is not found in the default channel, type <span class='path'><span class='cmtt-12'>conda</span></span> <span class='path'><span class='cmtt-12'>config</span></span> <span class='path'><span class='cmtt-12'>--add</span></span> <span class='path'><span class='cmtt-12'>channels</span></span>
+      <span class='path'><span class='cmtt-12'>conda-forge</span></span></li></ul>
+<!-- l. 218 --><p class='noindent'>The <span class='path'><span class='cmtt-12'>math</span></span> and <span class='path'><span class='cmtt-12'>tkinter</span></span> libraries do not have to be added in a new environment since they are already
+part of the base installation of Python.
+</p>
+<!-- l. 220 --><p class='noindent'><span class='paragraphHead'><a id='x1-7000'></a><span class='cmbx-12'>Editing the code</span></span>
+   Editing the code can be done with the IDE Visual Studio Code (VSC). Open the file using VSC
+or, using VSC, navigate to its directory. Afterwards, choose the virtual environment by opening the
+command palette (<span class='path'><span class='cmtt-12'>ctrl+shift+p</span></span>) and typing ”Python: Select Interpreter”. Visual Studio Code then
+lists all available virtual environments; choose one that contains the packages of Tab. <a href='#x1-4001r1'>1<!-- tex4ht:ref: tab:packages  --></a>. The
+third and last step is to then open the code-file <span class='path'><span class='cmtt-12'>Static_NutrientMixing.py</span></span> and click on
+run.
+                                                                                            
+                                                                                            
+</p>
+   <h2 class='chapterHead'><span class='titlemark'>Chapter 2</span><br /><a id='x1-80002'></a>Structure of the program</h2>
+<!-- l. 230 --><p class='noindent'>The different steps of the program are presented in Fig. <a href='#x1-8001r1'>1<!-- tex4ht:ref: fig:schema_prog_doc  --></a>. </p><figure class='figure'> 
+
+                                                                                            
+                                                                                            
+                                                                                            
+                                                                                            
+<!-- l. 233 --><p class='noindent'> <img alt='PIC' height='483' src='gfx/schema_program-.png' width='483' /> <a id='x1-8001r1'></a>
+</p>
+<figcaption class='caption'><span class='id'>Figure 1: </span><span class='content'>Schema of the program.                                                           </span></figcaption><!-- tex4ht:label?: x1-8001r1  -->
+                                                                                            
+                                                                                            
+   </figure>
+<!-- l. 237 --><p class='indent'>   In the first step, the program reads the parameters from the xml-files and saves them in Python
+dictionaries with the help of functions from <span class='cmti-12'>pandas</span>. Afterwards, the optimization problem is set up
+symbolically with CasADi and solved with IPOPT. At the end, the results are visualized and saved in
+a separate xml-file. In the following subsections all these parts will be explained in detail according to
+the order in Fig. <a href='#x1-8001r1'>1<!-- tex4ht:ref: fig:schema_prog_doc  --></a>.
+</p>
+   <h3 class='sectionHead'><span class='titlemark'>2.1   </span> <a id='x1-90002.1'></a>Contents of the input xml-files</h3>
+<!-- l. 243 --><p class='noindent'>The optimization parameters are stored as float-type numbers with a <span class='cmbx-12'>point ”.” </span>as the decimal
+separator in four different tables that are each realized as xml-file: </p>
+      <ul class='itemize1'>
+      <li class='itemize'><span class='path'><span class='cmtt-12'>Mix_Tank_Parameters.xml</span></span>
+      </li>
+      <li class='itemize'><span class='path'><span class='cmtt-12'>Water_Use.xml</span></span>
+      </li>
+      <li class='itemize'><span class='path'><span class='cmtt-12'>Nutrient_Concentrations.xml</span></span>
+      </li>
+      <li class='itemize'><span class='path'><span class='cmtt-12'>Fertilizers.xml</span></span>.</li></ul>
+<!-- l. 250 --><p class='noindent'>In the xml-files the rows and columns of the table are specified by tags. Each row of the table starts with
+the tag <span class='path'><span class='cmtt-12'>&lt;row&gt;</span></span> and ends with <span class='path'><span class='cmtt-12'>&lt;/row&gt;</span></span>. In each row the parameters are separately encapsulated in the
+tags <span class='path'><span class='cmtt-12'>&lt;header_name&gt;</span></span> and <span class='path'><span class='cmtt-12'>&lt;/hander_name&gt;</span></span>. These tags are the same in every row for their respective
+parameter and in that way the columns of the table are realized. If one parameter cannot be stated,
+the space between the start and end tag can be left empty. For an easier notation,they are
+referred to as rows and columns when describing the contents of the xml-files in the further
+documentation.
+</p><!-- l. 257 --><p class='indent'>   Since the program accesses the data of every column of the tables with the associated name of the
+header, it is important to not change the headers of existing columns of the tables. In contrast to
+that, the order of columns within one file does not matter. In the following paragraphs the contents of
+every xml-file will be explained as well as which inputs are mandatory and which are
+optional.
+</p><!-- l. 261 --><p class='indent'>   All the parameters that are stated in the files are by default assumed to have units \(\qty {}{\liter }\), \(\qty {}{\gram }\) and \(\qty {}{\gram \per \liter }\). In
+general, the user can use other units as well, but by doing so the program code has to be adjusted
+accordingly. The balancing weights \(\omega _\mathrm {bal}\) (see Sec. 2.2.1) assume that the volumes are given in \(\qty {}{\liter }\) and the
+fertilizer masses are given in \(\qty {}{\gram }\). There are fallback values <span class='path'><span class='cmtt-12'>V_max_fallback</span></span> that are used for
+constraining the maximum value that is stored in the tank after mixing a new solution.
+This value is given in \(\qty {}{\liter }\) as well and has to be adjusted when changing the units of the
+parameters.
+</p><!-- l. 267 --><p class='indent'>   Another important mark is that the units of the parameters have to be consistent for every input
+file, e.g. if the user changes a unit to \(\qty {}{\milli \liter }\) and the unit for masses is \(\qty {}{\kilo \gram }\), the concentrations in the file
+<span class='path'><span class='cmtt-12'>Nutrient_Concentrations.xml</span></span> has to be given in \(\qty {}{\kilo \gram \per \milli \liter }\).
+                                                                                            
+                                                                                            
+</p><!-- l. 270 --><p class='indent'>   Note that in the article, many of the contents of the xml-files were left out for a more compact and
+easier to follow presentation of the contents.
+</p>
+<!-- l. 272 --><p class='noindent'><span class='paragraphHead'><a id='x1-10000'></a><span class='cmbx-12'>The xml-file Mix_Tank_Parameters.xml</span></span>
+   The first file <span class='path'><span class='cmtt-12'>Mix_Tank_Parameters.xml</span></span> contains parameters that are associated with the water
+volume that is filled inside the mixing tank. By default all values of this file are assumed to be given
+in \(\qty {}{\liter }\). The contents of this file are given in List. <a href='#x1-10001r1'>1<!-- tex4ht:ref: List:Mix_Tank_Par  --></a>.
+</p>
+   <!-- l. 275 -->
+<p><a id='x1-10001r1'></a>
+<a id='x1-10002'></a>
+</p><pre class='lstlisting' id='listing-1'><span class='label'><a id='x1-10003r1'></a></span><span style='color:#000000'>  <span class='cmtt-10'>&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</span> 
+</span><span class='label'><a id='x1-10004r2'></a></span><span style='color:#000000'>  <span class='cmtt-10'>&lt;root&gt;</span> 
+</span><span class='label'><a id='x1-10005r3'></a></span><span style='color:#000000'>    <span class='cmtt-10'>&lt;row&gt;</span> 
+</span><span class='label'><a id='x1-10006r4'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Current_Value&gt;10&lt;/Current_Value&gt;</span> 
+</span><span class='label'><a id='x1-10007r5'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Target_Value&gt;&lt;/Target_Value&gt;</span> 
+</span><span class='label'><a id='x1-10008r6'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Max_Value&gt;900&lt;/Max_Value&gt;</span> 
+</span><span class='label'><a id='x1-10009r7'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Min_Value&gt;600&lt;/Min_Value&gt;</span> 
+</span><span class='label'><a id='x1-10010r8'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Max_Tank_Volume&gt;1000&lt;/Max_Tank_Volume&gt;</span> 
+</span><span class='label'><a id='x1-10011r9'></a></span><span style='color:#000000'>    <span class='cmtt-10'>&lt;/row&gt;</span> 
+</span><span class='label'><a id='x1-10012r10'></a></span><span style='color:#000000'>  <span class='cmtt-10'>&lt;/root&gt;</span></span></pre>
+<figcaption class='caption'><span class='id'>Listing 1:
+    </span><span class='content'>One
+    row
+    of
+    content
+    of
+    Mix_Tank_Parameters.xml</span></figcaption><!-- tex4ht:label?: x1-10012r  -->
+<!-- l. 288 --><p class='indent'>   Of the parameters given in this file, only the entry of the <span class='path'><span class='cmtt-12'>Current_Value</span></span> is mandatory, because
+the program has to know the initial state \(V_\mathrm {MW,pre}\) of the system. The other parameters are used to set the
+constraints of the water volume that is present in the mixing tank after realizing a new nutrient
+solution. How the bounds of these constraints are set depending on the input of parameters is
+explained in Sec. <a href='#x1-150002.3'>2.3<!-- tex4ht:ref: sec:OCP_app  --></a>. For both the maximum and minimum constraints, a fallback value is given in
+the program. Thus the entries for parameters <span class='path'><span class='cmtt-12'>Target_Value</span></span>, <span class='path'><span class='cmtt-12'>Max_Value</span></span>, <span class='path'><span class='cmtt-12'>Min_Value</span></span> and
+<span class='path'><span class='cmtt-12'>Max_Tank_Volume</span></span> are optional.
+</p>
+<!-- l. 294 --><p class='noindent'><span class='paragraphHead'><a id='x1-11000'></a><span class='cmbx-12'>The xml-file Water_Use.xml</span></span>
+   The file <span class='path'><span class='cmtt-12'>Water_Use.xml</span></span> contains data of the water sources that are used for mixing as well as
+parameters that affect the use of the different water sources. By default all values of this file are
+assumed to be given in \(\qty {}{\liter }\). The contents of this file are given in List. <a href='#x1-11001r2'>2<!-- tex4ht:ref: List:Water_Use_Par  --></a>.
+</p>
+   <!-- l. 299 -->
+<p><a id='x1-11001r2'></a>
+<a id='x1-11002'></a>
+</p><pre class='lstlisting' id='listing-2'><span class='label'><a id='x1-11003r1'></a></span><span style='color:#000000'>  <span class='cmtt-10'>&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</span> 
+</span><span class='label'><a id='x1-11004r2'></a></span><span style='color:#000000'>  <span class='cmtt-10'>&lt;root&gt;</span>   
+</span><span class='label'><a id='x1-11005r3'></a></span><span style='color:#000000'>    <span class='cmtt-10'>&lt;PlantDrain&gt;</span> 
+</span><span class='label'><a id='x1-11006r4'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Use_Source&gt;1&lt;/Use_Source&gt;</span> 
+</span><span class='label'><a id='x1-11007r5'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Max_Value&gt;400&lt;/Max_Value&gt;</span> 
+</span><span class='label'><a id='x1-11008r6'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Min_Value&gt;0&lt;/Min_Value&gt;</span> 
+</span><span class='label'><a id='x1-11009r7'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Current_Value&gt;2000&lt;/Current_Value&gt;</span> 
+</span><span class='label'><a id='x1-11010r8'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;MaxTank_Value&gt;4000&lt;/MaxTank_Value&gt;</span> 
+</span><span class='label'><a id='x1-11011r9'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Source_Weight&gt;-1&lt;/Source_Weight&gt;</span> 
+</span><span class='label'><a id='x1-11012r10'></a></span><span style='color:#000000'>    <span class='cmtt-10'>&lt;PlantDrain&gt;</span> 
+</span><span class='label'><a id='x1-11013r11'></a></span><span style='color:#000000'>  <span class='cmtt-10'>&lt;/root&gt;</span></span></pre>
+<figcaption class='caption'><span class='id'>Listing 2:
+    </span><span class='content'>One
+    row
+    of
+    content
+    of
+    Water_Use.xml</span></figcaption><!-- tex4ht:label?: x1-11013r  -->
+                                                                                            
+                                                                                            
+<!-- l. 312 --><p class='indent'>   In the first column under the header <span class='path'><span class='cmtt-12'>Water_Source</span></span> the identifiers of the water sources are given
+(usually as a string). It is mandatory to enter an identifier for every source. This allows the program
+to link the concentrations of the inputs that are given in the file <span class='path'><span class='cmtt-12'>Nutrient_Concentrations.xml</span></span> to
+the correct water source.
+</p><!-- l. 316 --><p class='indent'>   The second parameter <span class='path'><span class='cmtt-12'>Use_Source</span></span> (string) determines if the given water source should be used in
+the optimization. Value ”1” means the source is used. Best practice is to set to ”0” if it should not be
+used, but any other value works as well.
+</p><!-- l. 320 --><p class='indent'>   The following two parameters <span class='path'><span class='cmtt-12'>Max_Value</span></span> and <span class='path'><span class='cmtt-12'>Min_Value</span></span> realize the constraints for the
+optimization variables that are given by the water sources. Both values are optional, since the
+program uses fallback values if they are not entered. The fallback values of these constraints are again
+given in Sec. <a href='#x1-150002.3'>2.3<!-- tex4ht:ref: sec:OCP_app  --></a>.
+</p><!-- l. 324 --><p class='indent'>   The remaining three parameters <span class='path'><span class='cmtt-12'>Current_Value</span></span>, <span class='path'><span class='cmtt-12'>MaxTank_Value</span></span> and <span class='path'><span class='cmtt-12'>Source_Weight</span></span> are used to
+calculate the individual weights \(\omega _{\mathrm {water},i}\) of every water source in the error-term \(e_\mathrm {water}({u}_\mathrm {V})\) (Eq. (14)) of the objective
+function. These parameters are optional. If there is no weight parameter entered for a specific source,
+the corresponding weight is set equal to one. The weights \(\omega _{\mathrm {water},i}\) are furthermore amplified by the
+<span class='path'><span class='cmtt-12'>Current_Value</span></span> and <span class='path'><span class='cmtt-12'>MaxTank_Value</span></span> parameters. These parameters describe the state of the storage
+tanks where the water sources are stored. If the use of a water source is rewarded in the objective
+function (by setting the parameter <span class='path'><span class='cmtt-12'>Source_Weight</span></span> as a negative number), that reward gets
+increased when a high percentage of the tank is filled. In contrary, if the use of a water
+source is penalized in the cost-function, that penalization gets decreased when a high
+percentage of the tank is filled. The mathematical formulation of this is stated in Sec. <a href='#x1-150002.3'>2.3<!-- tex4ht:ref: sec:OCP_app  --></a>. If
+the water source is not stored in a tank, e.g. tap water or if the water sources should
+not be penalized depending on the fill status of the respective storage tank, these two
+parameters can be left blank. The weight \(\omega _{\mathrm {water},i}\) is then equal to the value given for the parameter
+<span class='path'><span class='cmtt-12'>Source_Weight</span></span>.
+</p>
+<!-- l. 335 --><p class='noindent'><span class='paragraphHead'><a id='x1-12000'></a><span class='cmbx-12'>The xml-file Nutrient_Concentrations.xml</span></span>
+   The file <span class='path'><span class='cmtt-12'>Nutrient_Concentrations.xml</span></span> contains all the values related to nutrient concentrations
+as well as the identifiers of the considered nutrients, e.g., their chemical symbols. By default
+all values of this file are assumed to be given in \(\qty {}{\gram \per \liter }\). The contents of the file are given in
+List. <a href='#x1-12001r3'>3<!-- tex4ht:ref: List:Nutrient_Concentrations_Par  --></a>.
+</p><!-- l. 341 --><p class='indent'>   In the first column the identifiers of the nutrients are stated. These identifiers are important to
+combine the nutrient masses realized by the water sources and fertilizers and thus correctly calculate
+the resulting nutrient masses of in the mixing tank. It is mandatory to enter an identifier for every
+nutrient that is to be used in the optimization.
+</p><!-- l. 345 --><p class='indent'>   In the second column the parameter <span class='path'><span class='cmtt-12'>Nutrient_Weight</span></span> is stored. This parameter sets the weights \(\omega _{\mathrm {N_{ref}},q}\)
+if the reference value is greater then zero or \(\omega _{\mathrm {N_{min}},q}\) if the reference value equals zero. Entering this
+parameter is optional. If no value is given for one nutrient, the corresponding weight is set equal to
+one.
+</p>
+   <!-- l. 350 -->
+<p><a id='x1-12001r3'></a>
+<a id='x1-12002'></a>
+</p><pre class='lstlisting' id='listing-3'><span class='label'><a id='x1-12003r1'></a></span><span style='color:#000000'>  <span class='cmtt-10'>&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</span> 
+</span><span class='label'><a id='x1-12004r2'></a></span><span style='color:#000000'>  <span class='cmtt-10'>&lt;root&gt;</span> 
+</span><span class='label'><a id='x1-12005r3'></a></span><span style='color:#000000'>    <span class='cmtt-10'>&lt;row&gt;</span> 
+</span><span class='label'><a id='x1-12006r4'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Nutrient&gt;NO3&lt;/Nutrient&gt;</span> 
+</span><span class='label'><a id='x1-12007r5'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Nutrient_Weight&gt;1&lt;/Nutrient_Weight&gt;</span> 
+</span><span class='label'><a id='x1-12008r6'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Start_Concentration&gt;0.1225&lt;/Start_Concentration&gt;</span> 
+</span><span class='label'><a id='x1-12009r7'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Target_Concentration&gt;0.1225&lt;/Target_Concentration&gt;</span> 
+</span><span class='label'><a id='x1-12010r8'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Max_Concentration&gt;&lt;/Max_Concentration&gt;</span> 
+</span><span class='label'><a id='x1-12011r9'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Min_Concentration&gt;0.11025&lt;/Min_Concentration&gt;</span> 
+</span><span class='label'><a id='x1-12012r10'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;FishDrain_Concentration&gt;0.094&lt;/FishDrain_Concentration&gt;</span> 
+</span><span class='label'><a id='x1-12013r11'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Rain_Concentration&gt;0.0004&lt;/Rain_Concentration&gt;</span> 
+</span><span class='label'><a id='x1-12014r12'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Tap_Concentration&gt;0.0063&lt;/Tap_Concentration&gt;</span> 
+</span><span class='label'><a id='x1-12015r13'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;PlantDrain_Concentration&gt;0.037&lt;/PlantDrain_Concentration&gt;</span> 
+</span><span class='label'><a id='x1-12016r14'></a></span><span style='color:#000000'>    <span class='cmtt-10'>&lt;/row&gt;</span> 
+</span><span class='label'><a id='x1-12017r15'></a></span><span style='color:#000000'>  <span class='cmtt-10'>&lt;/root&gt;</span></span></pre>
+<figcaption class='caption'><span class='id'>Listing 3:
+    </span><span class='content'>One
+    row
+    of
+                                                                                            
+                                                                                            
+    content
+    of
+    Nutrient_Concentrations.xml</span></figcaption><!-- tex4ht:label?: x1-12017r  -->
+<!-- l. 368 --><p class='indent'>   The third parameter <span class='path'><span class='cmtt-12'>Start_Concentration</span></span> is the concentration of nutrients that is given in the
+tank before mixing a new solution. It is mandatory to state a value as it is necessary for the
+initialization of the optimization.
+</p><!-- l. 371 --><p class='indent'>   Parameter <span class='path'><span class='cmtt-12'>Target_Concentration</span></span> is used to calculate the desired mass of nutrients that should
+be present in the tank after mixing a new solution (see Eq. (12)). It is therefore the basis of
+calculating the error terms \(e_{N_{MW,ref}}({u})\) and \(e_{N_{MW,min}}({u})\) in the objective function. Nevertheless, the parameter is optional and
+if the target concentration is not given for a specific nutrient it will simply not be considered in the
+objective function.
+</p><!-- l. 375 --><p class='indent'>   The next two parameters <span class='path'><span class='cmtt-12'>Max_Concentration</span></span> and <span class='path'><span class='cmtt-12'>Min_Concentration</span></span> realize the
+bounds of the nutrient concentrations after mixing a new solution. Both parameters are
+optional. If no <span class='path'><span class='cmtt-12'>Max_Concentration</span></span> is given and <span class='path'><span class='cmtt-12'>Target_Concentration</span></span> is not greater
+than zero, i.e. it is a harmful ion, a maximum concentration of \(\qty {200}{\milli \gram \per \liter }\) is assumed to calculate
+weights.
+</p><!-- l. 379 --><p class='indent'>   In the last columns of this xml-file the nutrient compositions of the water sources are stored. If one
+value of these concentrations is left out, the program assumes the concentration in the respective
+water source to be equal to zero. Entering these parameters is therefore optional. One <span class='cmbx-12'>important</span>
+thing to note is that for every water source that is stated in <span class='path'><span class='cmtt-12'>Water_Source.xml</span></span> there has to be one
+corresponding column of concentrations in this file. Furthermore, if the identifier given for the water
+source is <span class='path'><span class='cmtt-12'>&lt;source_name&gt;</span></span>, the header of the column that stores the concentrations of this source must
+be <span class='path'><span class='cmtt-12'>&lt;source_name&gt;_Concentration</span></span>.
+</p>
+<!-- l. 385 --><p class='noindent'><span class='paragraphHead'><a id='x1-13000'></a><span class='cmbx-12'>The xml-file Fertilizers.xml</span></span>
+   The last file containing the input parameters of the program is <span class='path'><span class='cmtt-12'>Fertilizers.xml</span></span>. The contents of
+the file are given in List. <a href='#x1-13001r4'>4<!-- tex4ht:ref: List:Fertilizers_Par  --></a>.
+</p><!-- l. 389 --><p class='indent'>   In the first column of the file once again the identifiers of the fertilizers are stated. These
+identifiers do not have a use in the program but make the xml-table way more clearly to read and
+thus it is recommended to set meaningful identifiers for every fertilizer.
+</p><!-- l. 392 --><p class='indent'>   The next parameter <span class='path'><span class='cmtt-12'>Use_Source</span></span> determines if the corresponding fertilizer should be used in the
+optimization. If the values is set to ”1” the fertilizer will considered and for any other value it won’t
+be used.
+</p><!-- l. 395 --><p class='indent'>   The Parameter in the third column <span class='path'><span class='cmtt-12'>Max_Value</span></span> sets the upper bound of the fertilizer consumption
+in the optimization. Stating these parameters is optional, because the program uses a fallback value
+(see Sec. <a href='#x1-150002.3'>2.3<!-- tex4ht:ref: sec:OCP_app  --></a>) if no parameter is given in the xml-file. By default this parameter is assumed to be given
+in \(\qty {}{\gram }\).
+</p><!-- l. 399 --><p class='indent'>   The parameters in <span class='path'><span class='cmtt-12'>Fertilizer_Weight</span></span> set the individual weights \(\omega _{\mathrm {fert},f}\) of every fertilizer in the
+error-term \(e_\mathrm {fert}({u}_\mathrm {N})\) (Eq. (15)) of the objective function. All the parameters are optional. If there is no
+weight parameter entered for a specific fertilizer, the corresponding weight is set equal to
+one.
+</p>
+   <!-- l. 403 -->
+<p><a id='x1-13001r4'></a>
+<a id='x1-13002'></a>
+</p><pre class='lstlisting' id='listing-4'><span class='label'><a id='x1-13003r1'></a></span><span style='color:#000000'>  <span class='cmtt-10'>&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</span> 
+</span><span class='label'><a id='x1-13004r2'></a></span><span style='color:#000000'>  <span class='cmtt-10'>&lt;root&gt;</span> 
+</span><span class='label'><a id='x1-13005r3'></a></span><span style='color:#000000'>    <span class='cmtt-10'>&lt;row&gt;</span> 
+</span><span class='label'><a id='x1-13006r4'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Fertilizers&gt;Ca_NO3_2&lt;/Fertilizers&gt;</span> 
+</span><span class='label'><a id='x1-13007r5'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Use_Source&gt;1&lt;/Use_Source&gt;</span> 
+</span><span class='label'><a id='x1-13008r6'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Max_Value&gt;500&lt;/Max_Value&gt;</span> 
+</span><span class='label'><a id='x1-13009r7'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Fertilizer_Weight&gt;1&lt;/Fertilizer_Weight&gt;</span> 
+</span><span class='label'><a id='x1-13010r8'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;NO3&gt;15.5&lt;/NO3&gt;</span> 
+</span><span class='label'><a id='x1-13011r9'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;NH4&gt;0&lt;/NH4&gt;</span> 
+</span><span class='label'><a id='x1-13012r10'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;P&gt;0&lt;/P&gt;</span> 
+</span><span class='label'><a id='x1-13013r11'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;K&gt;0&lt;/K&gt;</span> 
+</span><span class='label'><a id='x1-13014r12'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Ca&gt;19.9&lt;/Ca&gt;</span> 
+</span><span class='label'><a id='x1-13015r13'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Mg&gt;0&lt;/Mg&gt;</span> 
+</span><span class='label'><a id='x1-13016r14'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;S&gt;0&lt;/S&gt;</span> 
+</span><span class='label'><a id='x1-13017r15'></a></span><span style='color:#000000'>      <span class='cmtt-10'>&lt;Fe&gt;0&lt;/Fe&gt;</span> 
+</span><span class='label'><a id='x1-13018r16'></a></span><span style='color:#000000'>    <span class='cmtt-10'>&lt;/row&gt;</span> 
+</span><span class='label'><a id='x1-13019r17'></a></span><span style='color:#000000'>  <span class='cmtt-10'>&lt;/root&gt;</span></span></pre>
+                                                                                            
+                                                                                            
+<figcaption class='caption'><span class='id'>Listing 4:
+    </span><span class='content'>One
+    row
+    of
+    content
+    of
+    Fertilizers.xml</span></figcaption><!-- tex4ht:label?: x1-13019r  -->
+<!-- l. 423 --><p class='indent'>   The remaining parameters of the file describe the nutrient composition of each fertilizer. This
+composition is given as the percentage of nutrient mass that is added to the nutrient solution after
+putting a specific mass of fertilizers into the solution. The values are therefore given in \(\qty {}{\percent }\). The unit of
+these parameter should not be changed. To assign the nutrient mass contributed by the fertilizers to
+the correct nutrient, the headers of the composition parameters must be equal to the nutrient
+identifiers stated in <span class='path'><span class='cmtt-12'>Nutrient_Concentrations.xml</span></span>. However not all stated nutrient must be present
+as header. If a nutrient is missing in the <span class='path'><span class='cmtt-12'>Fertilizers.xml</span></span> file, its composition parameter is assumed
+to be equal to zero.
+</p><!-- l. 431 --><p class='noindent'>
+</p>
+   <h3 class='sectionHead'><span class='titlemark'>2.2   </span> <a id='x1-140002.2'></a>Reading the parameters with pandas</h3>
+<!-- l. 433 --><p class='noindent'>In the first part of the program the parameters that are stored in the xml-files are transformed to
+Python dictionaries with the help of the Python library pandas. This can be done with the
+<span class='path'><span class='cmtt-12'>pandas.read_xml()</span></span> function, that reads all data of the xml-file directly into a dataframe, where in
+case of the files <span class='path'><span class='cmtt-12'>Water_Use.xml</span></span>, <span class='path'><span class='cmtt-12'>Nutrient_Concentrations.xml</span></span> and <span class='path'><span class='cmtt-12'>Fertilizers.xml</span></span> the
+identifiers are used as the labels of the data. Furthermore, the identifiers are stored in a list of strings.
+In the remaining program these labels are then used to access the parameters by iterating
+through the list of identifiers and for every entry search the corresponding label in the
+dictionary.
+</p><!-- l. 438 --><p class='indent'>   The first thing that is done after reading the data is to iterate over the <span class='path'><span class='cmtt-12'>"Use_Source"</span></span> column of
+the dataframes of <span class='path'><span class='cmtt-12'>Water_Use.xml</span></span> and <span class='path'><span class='cmtt-12'>Fertilizers.xml</span></span> and check if any given source should be used
+in the optimization. If any element of <span class='path'><span class='cmtt-12'>"Use_Source"</span></span> is not equal to one, the corresponding row in the
+frame gets deleted from the frame with the use of the pandas function <span class='path'><span class='cmtt-12'>drop()</span></span> and by specifying the
+row-label.
+</p><!-- l. 441 --><p class='indent'>   After the frames are cleaned up one column with the key <span class='path'><span class='cmtt-12'>"Indexes"</span></span> is added to the dataframes of
+<span class='path'><span class='cmtt-12'>Water_Use.xml</span></span> and <span class='path'><span class='cmtt-12'>Fertilizers.xml</span></span>. In this column an index is assigned to every label and by that
+the water sources and fertilizers can easily be linked to the respective element in the vector of
+optimization variables.
+</p><!-- l. 444 --><p class='indent'>   Converting the dataframes to Python dictionaries can be done by calling the method <span class='path'><span class='cmtt-12'>to_dict()</span></span>
+of the dataframe. As a result four dictionaries are obtained that each contain all the parameters that
+were stated in the xml-files.
+</p><!-- l. 448 --><p class='noindent'>
+</p>
+   <h3 class='sectionHead'><span class='titlemark'>2.3   </span> <a id='x1-150002.3'></a>Setting up and solving the optimization problem</h3>
+<!-- l. 450 --><p class='noindent'>The main part of the program is setting up the optimization problem described in section 2.2. The
+whole problem formulation is done symbolically using the <span class='path'><span class='cmtt-12'>SX</span></span> datatype of CasADi to initialize the
+optimization variables <span class='path'><span class='cmtt-12'>u_opt</span></span>. Every element of this list of symbolic values can be linked to one input
+of the mixing tank system with the indexes that are established in the data frames of <span class='path'><span class='cmtt-12'>Water_Use.xml</span></span>
+                                                                                            
+                                                                                            
+and <span class='path'><span class='cmtt-12'>Fertilizers.xml</span></span>.
+</p><!-- l. 454 --><p class='indent'>   With the optimization variables initialized, the next step is to symbolically implement equations
+(8) to (23) to create the objective function as well as the constraints of the optimization. This is done
+in the following two paragraphs, first for the objective and afterwards for the constraints. In the
+second paragraph it is also explained in detail how the boundaries of the constraints are set
+depending on the inputs in the xml-files. A third paragraph at the end of this chapter then
+describes how the solver IPOPT is initialized and called to solve the generated optimization
+problem.
+</p>
+<!-- l. 459 --><p class='noindent'><span class='paragraphHead'><a id='x1-16000'></a><span class='cmbx-12'>Symbolically generating the objective function</span></span>
+   The first step is to symbolically calculate the volume \(V_\mathrm {MW,post}\) that is stored in the mixing tank after the
+solution is prepared. The calculation is done in a for-loop that is shown in the List. <a href='#x1-16001r5'>5<!-- tex4ht:ref: pseudo:V_post  --></a> below.
+</p><!-- l. 462 -->
+<p><a id='x1-16001r5'></a>
+<a id='x1-16002'></a>
+    </p><pre class='lstlisting' id='listing-5'><span class='label'><a id='x1-16003r1'></a><span class='cmr-10'>1</span></span><span style='color:#000000'>  <span class='cmtt-10'>V_post = V_0</span> 
+</span><span class='label'><a id='x1-16004r2'></a><span class='cmr-10'>2</span></span><span style='color:#000000'>  <span class='cmtt-10'>for i from 0 to i_max-1</span> 
+</span><span class='label'><a id='x1-16005r3'></a><span class='cmr-10'>3</span></span><span style='color:#000000'>    <span class='cmtt-10'>ind_water = WaterSource_dict["Indexes"][WaterSource_list[i]]</span>   
+</span><span class='label'><a id='x1-16006r4'></a><span class='cmr-10'>4</span></span><span style='color:#000000'>    <span class='cmtt-10'>V_post = V_post + u_opt[ind_water]</span> 
+</span><span class='label'><a id='x1-16007r5'></a><span class='cmr-10'>5</span></span><span style='color:#000000'>  <span class='cmtt-10'>end</span></span></pre>
+    
+    <figcaption class='caption'><span class='id'>Listing 5:
+        </span><span class='content'>For-loop
+        for
+        calculating
+        V_post</span></figcaption><!-- tex4ht:label?: x1-16007r  -->
+<!-- l. 469 --><p class='indent'>   Post-mixing volume \(V_\mathrm {MW,post}\) is set equal to \(V_\mathrm {MW,pre}\), which is the water volume that is currently stored
+in the mixing tank. The corresponding float-type value is located in the dictionary of
+<span class='path'><span class='cmtt-12'>Mixing_Tank_Parameters.xml</span></span> under the header <span class='path'><span class='cmtt-12'>Current_Volume</span></span>. In the for-loop the symbolic
+optimization variables are then added cumulatively. If for example \(i_\mathrm {max}=3\) and \(V_\mathrm {MW,pre}=\qty {10}{\liter }\), the resulting expression for \(V_\mathrm {MW,post}\)
+will be <br class='newline' /></p><div class='centerline'>                           <span class='path'><span class='cmtt-12'>V_post=10+u_opt_0+u_opt_1+u_opt2</span></span>.                           </div>
+<!-- l. 475 --><p class='indent'>   The next step is to generate a symbolic expression for \(N_\mathrm {MW,post}\). For this a for-loop iterates over every
+nutrient \(q\) and by that the elements of \(N_\mathrm {MW,post}\) are calculated separately for every single nutrient.
+Inside this loop the symbolic expressions of nutrient masses \(N_\mathrm {MW,q,post}\) are then again generated
+cumulatively via for-loops. The corressponding code is presented in List. <a href='#x1-16008r6'>6<!-- tex4ht:ref: pseudo:N_post  --></a> as pseudocode.
+</p><!-- l. 478 -->
+<p><a id='x1-16008r6'></a>
+<a id='x1-16009'></a>
+    </p><pre class='lstlisting' id='listing-6'><span class='label'><a id='x1-16010r1'></a><span class='cmr-10'>1</span></span><span style='color:#000000'>  <span class='cmtt-10'>for q from 0 to q_max-1</span> 
+</span><span class='label'><a id='x1-16011r2'></a><span class='cmr-10'>2</span></span><span style='color:#000000'>   
+</span><span class='label'><a id='x1-16012r3'></a><span class='cmr-10'>3</span></span><span style='color:#000000'>    <span class='cmtt-10'>N_post_water = V_0 * Nut_dict["Start_Concentration"][Nut_list[q]]</span> 
+</span><span class='label'><a id='x1-16013r4'></a><span class='cmr-10'>4</span></span><span style='color:#000000'>    <span class='cmtt-10'>for i from 0 to i_max-1</span> 
+</span><span class='label'><a id='x1-16014r5'></a><span class='cmr-10'>5</span></span><span style='color:#000000'>      <span class='cmtt-10'>ind_water = WaterSource_dict["Indexes"][WaterSource_list[ind_water]]</span> 
+</span><span class='label'><a id='x1-16015r6'></a><span class='cmr-10'>6</span></span><span style='color:#000000'>      <span class='cmtt-10'>c_iq = Nut_dict[WaterSource_list[ind_water]+"_Concentration"][Nut_list[q]]</span>   
+</span><span class='label'><a id='x1-16016r7'></a><span class='cmr-10'>7</span></span><span style='color:#000000'>      <span class='cmtt-10'>if isnan(c_iq) == 0</span> 
+</span><span class='label'><a id='x1-16017r8'></a><span class='cmr-10'>8</span></span><span style='color:#000000'>        <span class='cmtt-10'>N_post_water = N_post_water + u_opt[ind_water] * c_iq</span> 
+</span><span class='label'><a id='x1-16018r9'></a><span class='cmr-10'>9</span></span><span style='color:#000000'>      <span class='cmtt-10'>end</span> 
+</span><span class='label'><a id='x1-16019r10'></a><span class='cmr-10'>10</span></span><span style='color:#000000'>    <span class='cmtt-10'>end</span> 
+</span><span class='label'><a id='x1-16020r11'></a><span class='cmr-10'>11</span></span><span style='color:#000000'>   
+</span><span class='label'><a id='x1-16021r12'></a><span class='cmr-10'>12</span></span><span style='color:#000000'>    <span class='cmtt-10'>N_post_fertil = 0</span> 
+</span><span class='label'><a id='x1-16022r13'></a><span class='cmr-10'>13</span></span><span style='color:#000000'>    <span class='cmtt-10'>for f from 0 to f_max-1</span> 
+</span><span class='label'><a id='x1-16023r14'></a><span class='cmr-10'>14</span></span><span style='color:#000000'>      <span class='cmtt-10'>ind_fert = Fertilizer_dict["Indexes"][Fertilizer_list[ind_fert]]</span> 
+</span><span class='label'><a id='x1-16024r15'></a><span class='cmr-10'>15</span></span><span style='color:#000000'>      <span class='cmtt-10'>k_fq = Fertilizer_dict[Nut_list[q]][Fertilizer_list[ind_fert]]</span>   
+</span><span class='label'><a id='x1-16025r16'></a><span class='cmr-10'>16</span></span><span style='color:#000000'>      <span class='cmtt-10'>if Nut_list[q] in Fertilizer_dict and isnan(k_fq) == 0</span> 
+</span><span class='label'><a id='x1-16026r17'></a><span class='cmr-10'>17</span></span><span style='color:#000000'>        <span class='cmtt-10'>N_post_fertil = N_post_fertil + u_opt[ind_fert] * k_fq/100</span>   
+</span><span class='label'><a id='x1-16027r18'></a><span class='cmr-10'>18</span></span><span style='color:#000000'>      <span class='cmtt-10'>end</span> 
+</span><span class='label'><a id='x1-16028r19'></a><span class='cmr-10'>19</span></span><span style='color:#000000'>    <span class='cmtt-10'>end</span>  
+</span><span class='label'><a id='x1-16029r20'></a><span class='cmr-10'>20</span></span><span style='color:#000000'>    <span class='cmtt-10'>N_post_nut = N_post_water + N_post_fertil</span>      
+</span><span class='label'><a id='x1-16030r21'></a><span class='cmr-10'>21</span></span><span style='color:#000000'>  </span><div class='centerline'>\(\vdots \)</div></pre>
+    
+    <figcaption class='caption'><span class='id'>Listing 6:
+        </span><span class='content'>For-loop
+        for
+        calculating
+        N_post</span></figcaption><!-- tex4ht:label?: x1-16030r  -->
+<!-- l. 501 --><p class='indent'>   The nutrient mass realized by mixing the fertilizers and water sources are calculated separately via
+two for-loops and are then added together to the resulting nutrient mass. Note, that an
+optimization variable and thus the corresponding water source or fertilizer only gets added to the
+resulting expression if the value <span class='path'><span class='cmtt-12'>c_iq</span></span> – that is the concentration of nutrient \(i\) in water
+source \(q\) – or <span class='path'><span class='cmtt-12'>k_fq</span></span> – that is the mass fraction of nutrient \(i\) in fertilizer \(f\) – is a number-type
+                                                                                            
+                                                                                            
+data. The resulting symbolic expression of \(N_\mathrm {MW,q,post}\) is then pretty similar to that of \(V_\mathrm {MW,post}\). The only
+difference is that the optimization variables are multiplied by either the factor <span class='path'><span class='cmtt-12'>c_iq</span></span> or
+<span class='path'><span class='cmtt-12'>k_fq</span></span>.
+</p><!-- l. 506 --><p class='indent'>   The for-loop over the nutrients doesn’t end with the calculation of \(N_\mathrm {MW,q,post}\). The resulting expression is
+immediately afterwards used to symbolically calculate the error \(e_{N_{MW,q,ref}}({u})\) or \(e_{N_{MW,q,min}}({u})\). This is shown in List. <a href='#x1-16031r7'>7<!-- tex4ht:ref: pseudo:e_ref  --></a>.
+</p><!-- l. 509 -->
+<p><a id='x1-16031r7'></a>
+<a id='x1-16032'></a>
+    </p><pre class='lstlisting' id='listing-7'><span class='label'><a id='x1-16033r23'></a><span class='cmr-10'>23</span></span><span style='color:#000000'>  </span><div class='centerline'>\(\vdots \)</div> 
+<span class='label'><a id='x1-16034r24'></a><span class='cmr-10'>24</span></span><span style='color:#000000'>    <span class='cmr-10'>if isnan(Nut_dict[”Target_Concentration”][Nut_list[q]]) == 0:</span> 
+</span><span class='label'><a id='x1-16035r25'></a><span class='cmr-10'>25</span></span><span style='color:#000000'>      <span class='cmr-10'>N_ref = Nut_dict[”Target_Concentration”][Nut_list[q]] </span><span class='tcrm-1000'>∗ </span><span class='cmr-10'>V_post</span> 
+</span><span class='label'><a id='x1-16036r26'></a><span class='cmr-10'>26</span></span><span style='color:#000000'>      <span class='cmr-10'>w_Nut = 1</span> 
+</span><span class='label'><a id='x1-16037r27'></a><span class='cmr-10'>27</span></span><span style='color:#000000'>      <span class='cmr-10'>if isnan(Nut_dict[”Nutrient_Weight”][Nut_list[q]]) == 0</span> 
+</span><span class='label'><a id='x1-16038r28'></a><span class='cmr-10'>28</span></span><span style='color:#000000'>        <span class='cmr-10'>w_Nut = Nut_dict[”Nutrient_Weight”][Nut_list[q]]</span> 
+</span><span class='label'><a id='x1-16039r29'></a><span class='cmr-10'>29</span></span><span style='color:#000000'>      <span class='cmr-10'>end</span> 
+</span><span class='label'><a id='x1-16040r30'></a><span class='cmr-10'>30</span></span><span style='color:#000000'>      <span class='cmr-10'>if Nut_dict[”Target_Concentration”][Nut_list[q]] != 0</span> 
+</span><span class='label'><a id='x1-16041r31'></a><span class='cmr-10'>31</span></span><span style='color:#000000'>        <span class='cmr-10'>e_NutRef = e_NutRef + w_Nut </span><span class='tcrm-1000'>∗ </span><span class='cmr-10'>(N_post_nut</span><span class='tcrm-1000'>−</span><span class='cmr-10'>N_ref)ˆ2/N_refˆ2</span> 
+</span><span class='label'><a id='x1-16042r32'></a><span class='cmr-10'>32</span></span><span style='color:#000000'>      <span class='cmr-10'>else</span> 
+</span><span class='label'><a id='x1-16043r33'></a><span class='cmr-10'>33</span></span><span style='color:#000000'>        <span class='cmr-10'>e_NutMin = e_NutMin + w_Nut </span><span class='tcrm-1000'>∗ </span><span class='cmr-10'>(N_post_nut/V_post)ˆ2</span> 
+</span><span class='label'><a id='x1-16044r34'></a><span class='cmr-10'>34</span></span><span style='color:#000000'>      <span class='cmr-10'>end</span> 
+</span><span class='label'><a id='x1-16045r35'></a><span class='cmr-10'>35</span></span><span style='color:#000000'>    <span class='cmr-10'>end</span> 
+</span><span class='label'><a id='x1-16046r36'></a><span class='cmr-10'>36</span></span><span style='color:#000000'>  </span><div class='centerline'>\(\vdots \)</div> 
+<span class='label'><a id='x1-16047r37'></a><span class='cmr-10'>37</span></span><span style='color:#000000'>  <span class='cmr-10'>end</span></span></pre>
+    
+    <figcaption class='caption'><span class='id'>Listing 7:
+        </span><span class='content'>For-loop
+        for
+        calculating
+        e_NutRef</span></figcaption><!-- tex4ht:label?: x1-16047r  -->
+<!-- l. 526 --><p class='indent'>   Before calculating the error term \(e_{\mathrm {N_{MW,ref}},q}({u})\) or \(e_{\mathrm {N_{MW,min}},q}({u})\), the program checks if a reference concentration for the
+respective nutrient is given in <span class='path'><span class='cmtt-12'>Nutrient_Concentrations.xml</span></span>. The corresponding header is
+<span class='path'><span class='cmtt-12'>Target_Concentration</span></span>. Only then the error terms of one nutrient are calculated and added to the
+objective function. Ìf the parameter is given, the for-loop proceeds by calculating the reference mass
+via Eq. (12).
+</p><!-- l. 531 --><p class='indent'>   Afterwards, the weights for each individual nutrient are set. If no parameter for the weight
+is stated in <span class='path'><span class='cmtt-12'>Nutrient_Concentrations.xml</span></span>, the default value \(\omega _{\mathrm {N_{MW,ref}},q} = 1\) is used in the further
+computation.
+</p><!-- l. 534 --><p class='indent'>   At the end of the for-loop either \(e_{\mathrm {N_{MW,ref}},q_\mathrm {nut}}({u})\) is computed by Eq. (11) or \(e_{\mathrm {N_{MW,min}},q_\mathrm {harm}}({u})\) is computed by Eq.(13) –
+depending on the reference concentration being equal to zero or not. The error terms of
+each nutrient are then again added cumulatively to construct the resulting error \(e_\mathrm {N_{MW,ref}}({u})\) and
+\(e_\mathrm {N_{MW,min}}({u})\).
+</p><!-- l. 537 --><p class='indent'>   After the error terms of the resulting nutrient concentrations are generated, the same is done for \(e_\mathrm {water}({u}_\mathrm {V})\)
+and \(e_\mathrm {fertil}({u}_\mathrm {N})\).
+</p><!-- l. 539 --><p class='indent'>   The corresponding code is presented in List. <a href='#x1-16048r8'>8<!-- tex4ht:ref: pseudo:e_wat  --></a>. </p><!-- l. 540 -->
+<p><a id='x1-16048r8'></a>
+<a id='x1-16049'></a>
+    </p><pre class='lstlisting' id='listing-8'><span class='label'><a id='x1-16050r1'></a><span class='cmr-10'>1</span></span><span style='color:#000000'>  <span class='cmtt-10'>for i from 0 to i_max-1</span> 
+</span><span class='label'><a id='x1-16051r2'></a><span class='cmr-10'>2</span></span><span style='color:#000000'>    <span class='cmtt-10'>w_water = 1</span> 
+</span><span class='label'><a id='x1-16052r3'></a><span class='cmr-10'>3</span></span><span style='color:#000000'>    <span class='cmtt-10'>if isnan(WaterSource_dict["Source_Weight"][WaterSource_list[i]]) == 0:</span> 
+</span><span class='label'><a id='x1-16053r4'></a><span class='cmr-10'>4</span></span><span style='color:#000000'>      <span class='cmtt-10'>w_water = WaterSource_dict["Source_Weight"][WaterSource_list[i]]</span> 
+</span><span class='label'><a id='x1-16054r5'></a><span class='cmr-10'>5</span></span><span style='color:#000000'>      <span class='cmtt-10'>V_max = WaterSource_dict["MaxTank_Value"][WaterSource_list[i]]</span> 
+</span><span class='label'><a id='x1-16055r6'></a><span class='cmr-10'>6</span></span><span style='color:#000000'>      <span class='cmtt-10'>V_curr = WaterSource_dict["Current_Value"][WaterSource_list[i]]</span> 
+</span><span class='label'><a id='x1-16056r7'></a><span class='cmr-10'>7</span></span><span style='color:#000000'>      <span class='cmtt-10'>if isnan(V_max)==0 and isnan(V_curr)==0:</span> 
+</span><span class='label'><a id='x1-16057r8'></a><span class='cmr-10'>8</span></span><span style='color:#000000'>      <span class='cmtt-10'>if w_water &gt; 0:</span> 
+</span><span class='label'><a id='x1-16058r9'></a><span class='cmr-10'>9</span></span><span style='color:#000000'>        <span class='cmtt-10'>w_water = w_water * (2*(V_max-V_curr)/V_max)</span> 
+</span><span class='label'><a id='x1-16059r10'></a><span class='cmr-10'>10</span></span><span style='color:#000000'>      <span class='cmtt-10'>if w_water &lt; 0:</span> 
+</span><span class='label'><a id='x1-16060r11'></a><span class='cmr-10'>11</span></span><span style='color:#000000'>        <span class='cmtt-10'>w_water = w_water * (2 - 2*(V_max-V_curr)/V_max)</span> 
+</span><span class='label'><a id='x1-16061r12'></a><span class='cmr-10'>12</span></span><span style='color:#000000'>      <span class='cmtt-10'>ind_water = WaterSource_dict["Indexes"][WaterSource_list[i]]</span> 
+</span><span class='label'><a id='x1-16062r13'></a><span class='cmr-10'>13</span></span><span style='color:#000000'>      <span class='cmtt-10'>e_Water = e_Water + w_water * u_opt[ind_water]</span> 
+</span><span class='label'><a id='x1-16063r14'></a><span class='cmr-10'>14</span></span><span style='color:#000000'>  <span class='cmtt-10'>end</span></span></pre>
+    
+    <figcaption class='caption'><span class='id'>Listing 8:
+        </span><span class='content'>For-loop
+        for
+        calculating
+        e_water</span></figcaption><!-- tex4ht:label?: x1-16063r  -->
+<!-- l. 556 --><p class='indent'>   First, the weights \(\omega _{\mathrm {water},i}\) for each water source are set. If no parameter for a weight is given in
+<span class='path'><span class='cmtt-12'>Water_Use.xml</span></span>, the program uses the default value \(\omega _{\mathrm {water},i} = 1\). Then, the weights can be adjusted based on the
+percentage the respective storage tank is filled if the parameters <span class='path'><span class='cmtt-12'>MaxTank_Value</span></span> and <span class='path'><span class='cmtt-12'>Current_Value</span></span>
+are given. If the weight of a water source is positive, it increases the value of the cost function and is
+therefore penalized. The equation for adjusting the weights based on the ratio of current and
+maximum volume is \begin {equation}  \omega _{\mathrm {water},i,\mathrm {new}}= \omega _{\mathrm {water},i,\mathrm {old}} \cdot 2 \cdot \frac {V_\mathrm {max}-V_\mathrm {curr}}{V_\mathrm {max}}.  \end {equation}<a id='x1-16064r1'></a> Thereby \(\omega _{\mathrm {water},i}\), and thus the penalty of the corresponding water source, is doubled if
+the storage tank is empty, and is set to zero if the storage tank is full. If \(\omega _{\mathrm {water},i}\) is negative, its use is
+rewarded via the objective function. The equation for adjusting the weight in this case is \begin {equation}  \omega _{\mathrm {water},i,\mathrm {new}}= \omega _{\mathrm {water},i,\mathrm {old}} \cdot (2-2 \cdot \frac {V_\mathrm {max}-V_\mathrm {curr}}{V_\mathrm {max}}).  \end {equation}<a id='x1-16065r2'></a> By that the
+reward for using the water source is doubled if the storage tank is full and is set to zero if it is
+empty.
+                                                                                            
+                                                                                            
+</p><!-- l. 572 --><p class='indent'>   With the weights given, the symbolic expression for the error \(e_\mathrm {water}({u}_\mathrm {V})\) can easily be generated by
+multiplying all optimization variables of the water sources with the respective weights and then
+summing up the terms with a for-loop.
+</p><!-- l. 574 --><p class='indent'>   Computing \(e_\mathrm {fertil}({u}_\mathrm {N})\) is done in the same way. The weights are first set to their default value \(\omega _{\mathrm {fert},f} = 1\), and if a
+parameter for the weight is given in <span class='path'><span class='cmtt-12'>Fertilizers.xml</span></span> it is adjusted accordingly. The error \(e_\mathrm {fert}({u}_\mathrm {N})\) is then
+symbolically generated by multiplying the weights with the optimization variable of the respective
+fertilizer and summing up the terms, again with a for-loop. Since this section of the code is very
+similar to that of the water error, the code is not listed.
+</p><!-- l. 579 --><p class='indent'>   The last step for generating the objective function is to set the balancing weights according to Eq.
+(9) and generate the objective function as stated in Eq. (8).
+</p>
+<!-- l. 581 --><p class='noindent'><span class='paragraphHead'><a id='x1-17000'></a><span class='cmbx-12'>Symbolically generating the constraints</span></span>
+   The second component of the static optimization problem are the constraints. In total there are
+three sets of constraints that need to be implemented in the program code.
+</p>
+<!-- l. 585 --><p class='noindent'><span class='paragraphHead'><a id='x1-18000'></a><span class='cmbxti-10x-x-120'>The Bounds of optimization variables</span></span>
+   The first set of constraints are the lower and upper bounds of the optimization variables, i.e., the
+maximum and minimum allowed values of fertilizers and water sources for mixing. The values for the
+bounds of water sources are given in <span class='path'><span class='cmtt-12'>Water_Use.xml</span></span> in the columns <span class='path'><span class='cmtt-12'>Max_Value</span></span> and <span class='path'><span class='cmtt-12'>Min_Value</span></span>. If
+one of these parameters is not given the program uses the default values \(u_\mathrm {max,def}=\infty \) and \(u_\mathrm {min,def}= 0\). For the fertilizers, only
+the maximum bound can be specified in <span class='path'><span class='cmtt-12'>Fertilizers.xml</span></span> in the column <span class='path'><span class='cmtt-12'>Max_Value</span></span>. If no parameter
+is stated, the program again uses \(u_\mathrm {max,def}=\infty \) as the upper limit. The upper and lower bounds are realized
+separately from the other constraints as two one-dimensional numpy arrays <span class='path'><span class='cmtt-12'>u_max</span></span> and <span class='path'><span class='cmtt-12'>u_min</span></span>. The
+reason for the separate statement is that the solver IPOPT treats bounds of variables different than
+other algebraic constraints. Variables <span class='path'><span class='cmtt-12'>u_max</span></span> and <span class='path'><span class='cmtt-12'>u_min</span></span> are initialized as arrays of zeros
+with
+</p>
+   <div class='centerline'>              <span class='path'><span class='cmtt-12'>u_max=np.zeros(Number_of_WaterSources+Number_of_Fertilizers)</span></span>.              </div><p>
+The program then iterates over all water sources and afterwards over all fertilizers via a for-loop. If
+the parameters for the maximum or minimum bound are given, the respective element of <span class='path'><span class='cmtt-12'>u_max</span></span> is set
+accordingly. Otherwise the default value is inserted.
+</p><!-- l. 600 --><p class='noindent'><span class='paragraphHead'><a id='x1-19000'></a><span class='cmbxti-10x-x-120'>Constraints on the Water Volume inside the mixing tank</span></span>
+   The rest of the algebraic constraints are expressed symbolically in the vector <span class='path'><span class='cmtt-12'>h_mix</span></span>. The vector is
+initialized as an empty list. All algebraic expressions of the constraints are then one by one added to
+the vector with the Python function <span class='path'><span class='cmtt-12'>append()</span></span>. All constraints are stated such that the lower bound
+of the resulting algebraic expression is always equal to zero and that the upper bound is
+infinite.
+</p><!-- l. 606 --><p class='indent'>   The first algebraic constraint is the water volume \(V_\mathrm {MW,post}\) in the mixing tank after the solution is
+prepared. In the program code this volume is expressed by the symbolic variable <span class='path'><span class='cmtt-12'>V_post</span></span>, which was
+introduced in the previous paragraph. For the he mathematical formulation of the constraints see Eq.
+(20) and Eq. (21), where the latter equation is multiplied by minus one, such that both
+constraints have the lower limit of zero and no upper limit. The parameters \(V_\mathrm {MW,post,max}\) and \(V_\mathrm {MW,post,min}\) are specified
+by the user through the file <span class='path'><span class='cmtt-12'>Mixing_Tank_Parameters.xml</span></span>. The program first checks
+if an input is given in the <span class='path'><span class='cmtt-12'>Target_Value</span></span> column. If this is the case, \(V_\mathrm {MW,post,max}\) and \(V_\mathrm {MW,post,min}\) are set to:
+                                                                                            
+                                                                                            
+\begin {align}  V_\mathrm {MW,post,max} =1.01 \cdot V_\mathrm {MW,target}, \\ V_\mathrm {MW,post,min} =0.99 \cdot V_\mathrm {MW,target}.  \end {align}
+</p><!-- l. 616 --><p class='indent'>   In this case the upper and lower bounds guarantee that the resulting water volume in the mixing
+tank is very close to the reference value. If the target volume is not stated, the program checks if there
+is an input given in the columns <span class='path'><span class='cmtt-12'>Max_Value</span></span> and <span class='path'><span class='cmtt-12'>Min_Value</span></span>. If a parameter is available in <span class='path'><span class='cmtt-12'>Min_Value</span></span>,
+\(V_\mathrm {MW,post,min}\) is set accordingly. If this input is also not given, the program uses \(V_\mathrm {MW,pre}\) as default value. The same goes
+for the maximum bound. If <span class='path'><span class='cmtt-12'>Max_Value</span></span> is given, \(V_\mathrm {MW,post,min}\) is set to this value. Else, the program checks for a
+parameter in the column <span class='path'><span class='cmtt-12'>Max_Tank_Volume</span></span>, and if this also does not exist, \(V_\mathrm {MW,post,max}\) is by default set to
+\begin {align}  V_\mathrm {MW,post,max} =\max \left ( V_\mathrm {MW,pre}+\qty {100}{\liter },\qty {1000}{\liter }\right ).  \end {align}
+</p>
+<!-- l. 627 --><p class='noindent'><span class='paragraphHead'><a id='x1-20000'></a><span class='cmbxti-10x-x-120'>Constraints on the nutrient concentrations inside the mixing tank</span></span>
+   The last set of constraints are the limits of the post-mixing nutrient concentrations in the mixing
+tank. In the program code, these constraints are generated at the end of the for-loop of List. <a href='#x1-16031r7'>7<!-- tex4ht:ref: pseudo:e_ref  --></a>,
+because \(N_{\mathrm {MW},q,\mathrm {post}}\) is already available after computing \(e_{N_\mathrm {MW,ref}}({u})\). The constraints of the concentrations are
+given in Eq. (16) and Eq. (17), where the latter equation is again multiplied by minus one.
+Both are only implemented for a specific nutrient if the parameters for the maximum and
+minimum concentration are given in <span class='path'><span class='cmtt-12'>Nutrient_Concentrations.xml</span></span> in the row of the
+corresponding nutrient identifier. The respective columns are <span class='path'><span class='cmtt-12'>Max_Concentration</span></span> and
+<span class='path'><span class='cmtt-12'>Min_Concentration</span></span>.
+</p>
+<!-- l. 634 --><p class='noindent'><span class='paragraphHead'><a id='x1-21000'></a><span class='cmbx-12'>Solving the generated optimization problem</span></span>
+   For solving the stated optimization problem with IPOPT through the CasADi interface,
+the components of the optimization, i.e. the objective function <span class='path'><span class='cmtt-12'>J_mix</span></span>, constraints <span class='path'><span class='cmtt-12'>h_mix</span></span>
+and optimization variables <span class='path'><span class='cmtt-12'>u_opt</span></span> first have to be combined in one Python dictionary
+<span class='path'><span class='cmtt-12'>nlp_mix</span></span>. Then, some basic solver-options <span class='path'><span class='cmtt-12'>opts_sol</span></span> are modified. Both variables are then
+used to initialize the solver IPOPT with the CasADi function <span class='path'><span class='cmtt-12'>nlpsol()</span></span>. The solver can
+then be run to solve the symbolically stated optimization problem. Variables that are
+passed to the solver are the upper and lower bounds of the optimization variables <span class='path'><span class='cmtt-12'>u_max</span></span>
+and <span class='path'><span class='cmtt-12'>u_min</span></span>, upper and lower bounds of the constraints <span class='path'><span class='cmtt-12'>h_max</span></span> and <span class='path'><span class='cmtt-12'>h_min</span></span> and the starting
+values of the optimization variables <span class='path'><span class='cmtt-12'>u_0</span></span> that initialize the iterative solving process. For the
+optimization variables that are associated with the fertilizers, the starting values are chosen to
+be equal to zero. For the water sources the starting values are set as defined by Eq. (<a href='#x1-21001r3'>3<!-- tex4ht:ref: eq:u0  --></a>)
+\begin {equation}  u_{\mathrm {0,}i} = \frac {V_\mathrm {MW,post,max}}{i_\mathrm {max}}. \label {eq:u0}  \end {equation}<a id='x1-21001r3'></a>
+</p><!-- l. 647 --><p class='noindent'>
+</p>
+   <h3 class='sectionHead'><span class='titlemark'>2.4   </span> <a id='x1-220002.4'></a>Saving the parameters in an output xml-file with pandas</h3>
+<!-- l. 648 --><p class='noindent'>Saving the solution the solver provides in a xml-file is done with functions of the pandas library. The
+optimization variables and the identifiers are combined in a Python dictionary, which
+is then transformed to a Pandas-dataframe. By using the function <span class='path'><span class='cmtt-12'>to_xml()</span></span> a xml-file
+<span class='path'><span class='cmtt-12'>Output_Values.xml</span></span> is created, which contains all data that was previously stored in the
+frame.
+                                                                                            
+                                                                                            
+</p>
+   <h2 class='chapterHead'><span class='titlemark'>Chapter 3</span><br /><a id='x1-230003'></a>Additional notes</h2>
+   <h3 class='sectionHead'><span class='titlemark'>3.1   </span> <a id='x1-240003.1'></a>Error messages</h3>
+<!-- l. 655 --><p class='noindent'>There are two parts in the program that lead to an exception which triggers an error warning and an
+immediate exit out of the program. The first exception happens when the starting concentration is
+equal to the reference concentration and the stated maximum volume is less or equal to the current
+volume. In this case the desired nutrient solution is already present in the mixing tank and a new
+solution does not have to be mixed. The program then stops the execution at this case, because it also
+leads to a division by zero when initializing the balancing weights and therefore to an error message of
+the solver.
+</p><!-- l. 660 --><p class='indent'>   The second exception occurs when the optimization problem is infeasible. This can for example
+happen if the sum of the upper bounds of water sources added to the current volume of the mixing
+tank is less than the minimum water volume that should be in the tank after mixing the solution.
+Another example is that by constraining the use of certain water sources the minimum realizable
+nutrient concentration is larger than the stated <span class='path'><span class='cmtt-12'>Max_Value</span></span> in <span class='path'><span class='cmtt-12'>Nutrient_Concentrations.xml</span></span>. If the
+corresponding error message shows up, the user is advised to check the inputs in the xml-files for
+plausibility.
+</p><!-- l. 665 --><p class='noindent'>
+</p>
+   <h3 class='sectionHead'><span class='titlemark'>3.2   </span> <a id='x1-250003.2'></a>Deactivating plots</h3>
+<!-- l. 667 --><p class='noindent'>At the end of the program the simulation results are visually presented as bar charts. These plots
+were also used in Sec. 3.1. However, keeping the plot open also interrupts the program execution and
+a new run of the program can only be done after the plot is closed. If the visualization of the results is
+not of interest, the respective line <span class='path'><span class='cmtt-12'>plot.show()</span></span> at the end of the Python script can be commented or
+deleted.
+</p><!-- l. 672 --><p class='noindent'>
+</p>
+   <h3 class='sectionHead'><span class='titlemark'>3.3   </span> <a id='x1-260003.3'></a>Copyright and License</h3>
+<!-- l. 673 --><p class='noindent'>Copyright (c) 2024 Stefan Streif, stefan.streif@etit.tu-chemnitz.de
+</p><!-- l. 675 --><p class='indent'>   Licensed under the EUPL-1.2-or-later
+</p><!-- l. 677 --><p class='noindent'>—————————————————————————————–<br class='newline' />The Work is a work in progress, which is continuously improved by numerous Contributors. It is
+not a finished work and may therefore contain defects or ‘bugs’ inherent to this type of
+development.
+</p><!-- l. 682 --><p class='indent'>   For the above reason, the Work is provided under the Licence on an ‘as is’ basis and without
+warranties of any kind concerning the Work, including without limitation merchantability, fitness for a
+particular purpose, absence of defects or errors, accuracy, non-infringement of intellectual property
+rights other than copyright as stated in Article 6 of this Licence.
+</p><!-- l. 688 --><p class='indent'>   This disclaimer of warranty is an essential part of the Licence and a condition for the grant of any
+rights to the Work.<br class='newline' />—————————————————————————————–
+</p><!-- l. 692 --><p class='indent'>   See <a href='https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12'>https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12</a> for full license text.
+</p>
+                                                                                            
+                                                                                            
+    
+</body> 
+</html>
